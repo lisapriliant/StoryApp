@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="rich_black">#02061C</color>
+    <color name="charcoal">#273848</color>
+    <color name="verdigris">#6CC0C7</color>
+    <color name="chocolate_cosmos">#651D1E</color>
+    <color name="tiffany_blue">#84D2D7</color>
+    <color name="seasalt">#FAFBFB</color>
+    <color name="licorice">#160C19</color>
+</resources>

@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Story App</string>
+    <string name="welcome">Welcome to Story App!</string>
+    <string name="welcome_desc">Get ready to share your stories and experiences with the world. Start sharing your first story and embark on an exciting journey of your story. Only on Story App!</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="login_msg">Ready to share your story?</string>
+    <string name="login_msg2">Login to your account!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register_msg">Complete your data below!</string>
+    <string name="name">Name</string>
+    <string name="must_register">Don\'t have an account?</string>
+    <string name="must_login">Already have an account?</string>
+    <string name="name_required">Name is required!</string>
+    <string name="email_required">Email is required!</string>
+    <string name="password_required">Password is required!</string>
+    <string name="email_error">Enter your email correctly!</string>
+    <string name="password_error">Password must not be less than 8 characters!</string>
+    <string name="story_picture">Story Picture</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</string>
+    <string name="add_new_story">Add New Story</string>
+    <string name="add_story">Add Story</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="type_desc">Type description here...</string>
+    <string name="detail_story">Detail Story</string>
+    <string name="setting">Setting</string>
+    <string name="logout">Logout</string>
+</resources>
