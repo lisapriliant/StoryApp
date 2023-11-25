@@ -11,6 +11,8 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import androidx.core.view.isVisible
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lisapriliant.storyapp.databinding.ActivityMainBinding
 import com.lisapriliant.storyapp.R
@@ -19,9 +21,10 @@ import com.lisapriliant.storyapp.databinding.ItemStoryBinding
 import com.lisapriliant.storyapp.ui.ViewModelFactory
 import com.lisapriliant.storyapp.ui.add.AddStoryActivity
 import com.lisapriliant.storyapp.ui.detail.DetailActivity
-import com.lisapriliant.storyapp.ui.showToastFromLiveData
+import com.lisapriliant.storyapp.ui.maps.MapsActivity
 import com.lisapriliant.storyapp.ui.startActivity
 import com.lisapriliant.storyapp.ui.welcome.WelcomeActivity
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -30,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel by viewModels<MainViewModel> {
         ViewModelFactory.getInstance(this)
     }
-    private var token = ""
+    private val _token = MutableLiveData<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +59,11 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             rvListStory.layoutManager = layoutManager
             rvListStory.setHasFixedSize(true)
-            rvListStory.adapter = adapter
+            rvListStory.adapter = adapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    adapter.retry()
+                }
+            )
         }
 
         adapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallback {
@@ -79,9 +86,9 @@ class MainActivity : AppCompatActivity() {
         showLoading(false)
         mainViewModel.getSession().observe(this) {
             Log.e(TAG, "isLogin: ${it.isLogin}")
-            token = it.token
+            _token.value = it.token
             if (it.isLogin) {
-                Log.e(TOKEN, "token: $token")
+                Log.e(TOKEN, "token: $_token")
                 setupData()
             } else {
                 goToWelcome()
@@ -90,21 +97,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupData() {
-        mainViewModel.getApiServiceWithToken().observe(this) { apiService ->
-            if (apiService != null) {
-                mainViewModel.getAllStory(apiService)
-            } else {
-                showToastFromLiveData(mainViewModel.toast)
-            }
-        }
-        mainViewModel.listStory.observe(this) { listStory ->
-            val list = listStory != null
-            val story = listStory.isNotEmpty()
-            if (list && story) {
-                adapter.setList(listStory)
-            } else {
-                showToastFromLiveData(mainViewModel.toast)
-            }
+        mainViewModel.storyItem.observe(this) {
+            adapter.submitData(lifecycle, it)
         }
     }
 
@@ -126,16 +120,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
+            R.id.maps -> {
+                goToMaps()
+                true
+            }
             R.id.setting -> {
                 setupSetting()
                 true
             }
             R.id.logout -> {
-                mainViewModel.isLogout()
+                lifecycleScope.launch {
+                    mainViewModel.logout()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun goToMaps() {
+        startActivity(Intent(this, MapsActivity::class.java))
     }
 
     private fun setupSetting() {

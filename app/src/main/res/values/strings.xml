@@ -27,4 +27,17 @@
     <string name="detail_story">Detail Story</string>
     <string name="setting">Setting</string>
     <string name="logout">Logout</string>
+
+    <string name="maps">Maps</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satellite</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="hybrid_type">Hybrid</string>
+    <string name="checkbox">Add story with your location</string>
+    <string name="image_required">Image is required!</string>
+    <string name="desc_required">Description is required!</string>
+
+    <string name="timeout">Timeout</string>
+    <string name="retry">Retry</string>
 </resources>

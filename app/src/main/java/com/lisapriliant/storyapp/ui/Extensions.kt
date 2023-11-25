@@ -8,7 +8,7 @@ import com.lisapriliant.storyapp.data.pref.UserPreference
 import com.lisapriliant.storyapp.data.retrofit.ApiConfig
 import com.lisapriliant.storyapp.data.retrofit.ApiService
 import com.lisapriliant.storyapp.ui.detail.DetailActivity
-import com.lisapriliant.storyapp.ui.main.MainActivity
+import com.lisapriliant.storyapp.ui.maps.MapsActivity
 import kotlinx.coroutines.flow.first
 
 suspend fun UserPreference.getApiServiceWithToken(): ApiService? {
@@ -25,15 +25,15 @@ inline fun <reified T : Activity> Activity.startActivity() {
     startActivity(intent)
 }
 
-fun MainActivity.showToastFromLiveData(toastLiveData: LiveData<Event<String>>) {
+fun DetailActivity.showToastFromLiveData(toastLiveData: LiveData<Event<String>>) {
     toastLiveData.observe(this) {
-        it.getContentIfNotHandled().let { toast ->
+        it.getContentIfNotHandled()?.let { toast ->
             Toast.makeText(this, toast, Toast.LENGTH_SHORT).show()
         }
     }
 }
 
-fun DetailActivity.showToastFromLiveData(toastLiveData: LiveData<Event<String>>) {
+fun MapsActivity.showToastFromLiveData(toastLiveData: LiveData<Event<String>>) {
     toastLiveData.observe(this) {
         it.getContentIfNotHandled()?.let { toast ->
             Toast.makeText(this, toast, Toast.LENGTH_SHORT).show()

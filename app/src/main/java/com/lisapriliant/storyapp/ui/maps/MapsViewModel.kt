@@ -1,23 +1,21 @@
-package com.lisapriliant.storyapp.ui.detail
+package com.lisapriliant.storyapp.ui.maps
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.lisapriliant.storyapp.data.pref.UserPreference
-import com.lisapriliant.storyapp.data.response.DetailStoryResponse
 import com.lisapriliant.storyapp.data.response.ErrorResponse
+import com.lisapriliant.storyapp.data.response.StoriesResponse
 import com.lisapriliant.storyapp.data.retrofit.ApiService
 import com.lisapriliant.storyapp.ui.Event
 import com.lisapriliant.storyapp.ui.getApiServiceWithToken
-import kotlinx.coroutines.launch
 
-class DetailViewModel(private val userPreference: UserPreference) : ViewModel() {
-    private val _detailStory = MutableLiveData<DetailStoryResponse>()
-    val detailStory: MutableLiveData<DetailStoryResponse> = _detailStory
+class MapsViewModel(private val userPreference: UserPreference): ViewModel() {
+    private val _storiesLocation = MutableLiveData<StoriesResponse>()
+    val storiesLocation: MutableLiveData<StoriesResponse> = _storiesLocation
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -25,14 +23,15 @@ class DetailViewModel(private val userPreference: UserPreference) : ViewModel() 
     private val _toast = MutableLiveData<Event<String>>()
     val toast: LiveData<Event<String>> = _toast
 
-    private suspend fun getDetailStory(apiService: ApiService, id: String = "") {
+    suspend fun getStoriesLocation(apiService: ApiService) {
         _isLoading.value = true
         try {
             val apiServiceWithToken = userPreference.getApiServiceWithToken()
             if (apiServiceWithToken != null) {
-                val response = apiService.getDetailStory(id)
+                val response = apiService.getStoriesLocation(1)
                 if (response.isSuccessful) {
-                    _detailStory.value = response.body()
+                    _storiesLocation.value = response.body()
+                    _toast.value = Event(response.body()?.message.toString())
                 } else {
                     val jsonInString = response.errorBody()?.string()
                     val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
@@ -41,7 +40,7 @@ class DetailViewModel(private val userPreference: UserPreference) : ViewModel() 
             }
         } catch (e: Exception) {
             _toast.value = Event(e.message ?: "Error while loading data")
-            Log.e(TAG, "getDetailStory: ${e.message}", e)
+            Log.e(TAG, "getStoriesLocation: ${e.message}", e)
         } finally {
             _isLoading.value = false
         }
@@ -53,13 +52,7 @@ class DetailViewModel(private val userPreference: UserPreference) : ViewModel() 
         }
     }
 
-    fun getDetailStoryById(apiService: ApiService, id: String) {
-        viewModelScope.launch {
-            this@DetailViewModel.getDetailStory(apiService, id)
-        }
-    }
-
     companion object {
-        const val TAG = "DetailViewModel"
+        const val TAG = "MapsViewModel"
     }
 }

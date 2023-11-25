@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.lisapriliant.storyapp.R
 import com.lisapriliant.storyapp.data.pref.UserModel
 import com.lisapriliant.storyapp.databinding.ActivityLoginBinding
@@ -20,6 +21,7 @@ import com.lisapriliant.storyapp.ui.main.MainActivity
 import com.lisapriliant.storyapp.ui.register.RegisterActivity
 import com.lisapriliant.storyapp.ui.startActivity
 import com.lisapriliant.storyapp.ui.welcome.WelcomeActivity
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -95,6 +97,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.login.observe(this) {
             if (it != null) {
                 if (!it.error) {
+                    ViewModelFactory.resetInstance()
                     startActivity<MainActivity>()
                     finish()
                 }
@@ -125,7 +128,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun saveSession(user: UserModel) {
-        loginViewModel.saveSession(user)
+        lifecycleScope.launch {
+            loginViewModel.saveSession(user)
+        }
     }
 
     @Suppress("DEPRECATION")

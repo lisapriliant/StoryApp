@@ -15,6 +15,7 @@ import com.lisapriliant.storyapp.ui.add.AddStoryViewModel
 import com.lisapriliant.storyapp.ui.detail.DetailViewModel
 import com.lisapriliant.storyapp.ui.login.LoginViewModel
 import com.lisapriliant.storyapp.ui.main.MainViewModel
+import com.lisapriliant.storyapp.ui.maps.MapsViewModel
 import com.lisapriliant.storyapp.ui.register.RegisterViewModel
 
 class ViewModelFactory(
@@ -29,7 +30,7 @@ class ViewModelFactory(
                 RegisterViewModel(apiService) as T
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
-                LoginViewModel(repository, apiService) as T
+                LoginViewModel(userPreference, apiService) as T
             }
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 MainViewModel(userPreference, repository) as T
@@ -38,7 +39,10 @@ class ViewModelFactory(
                 DetailViewModel(userPreference) as T
             }
             modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
-                AddStoryViewModel(userPreference, repository) as T
+                AddStoryViewModel(userPreference) as T
+            }
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(userPreference) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
@@ -57,6 +61,11 @@ class ViewModelFactory(
             INSTANCE ?: ViewModelFactory(repository, userPreference, apiService)
         }.also {
             INSTANCE = it
+        }
+
+        fun resetInstance() {
+            INSTANCE = null
+            Injection.resetInstance()
         }
     }
 }
